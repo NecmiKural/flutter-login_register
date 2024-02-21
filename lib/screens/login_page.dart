@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:login_and_register_app/main.dart';
 import 'package:login_and_register_app/screens/register_page.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -140,8 +141,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future login() async {
     //TODO: if fails, toast
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim());
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailController.text.trim(),
+          password: passwordController.text.trim());
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }

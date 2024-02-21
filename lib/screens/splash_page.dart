@@ -1,4 +1,4 @@
-// import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:login_and_register_app/screens/home_page.dart';
@@ -24,24 +24,18 @@ class _SplashScreenState extends State<SplashScreen>
       () {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            // builder: (_) => const LoginScreen(),
-            builder: (_) => const HomeScreen(),
+            builder: (_) => StreamBuilder<User?>(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return const HomeScreen();
+                } else {
+                  return const LoginScreen();
+                }
+              },
+            ),
           ),
         );
-        // StreamBuilder<User?>(
-        //   stream: FirebaseAuth.instance.authStateChanges(),
-        //   builder: (context, snapshot) {
-        //     if (snapshot.hasData) {
-        //       return const Column(
-        //         children: [
-        //           Center(child: Text("Home Page")),
-        //         ],
-        //       );
-        //     } else {
-        //       return const LoginScreen();
-        //     }
-        //   },
-        // );
       },
     );
   }

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:login_and_register_app/screens/register_page.dart';
 
@@ -98,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 50,
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: login,
                     child: const Text(
                       'Login',
                       style: TextStyle(
@@ -121,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
                       },
                       child: const Text(
-                        'Sing Up',
+                        'Register',
                         style: TextStyle(
                           color: Colors.deepPurple,
                         ),
@@ -135,5 +136,12 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  Future login() async {
+    //TODO: if fails, toast
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim());
   }
 }

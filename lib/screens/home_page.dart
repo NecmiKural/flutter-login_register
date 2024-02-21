@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,6 +17,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser!;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -41,10 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       title: Text('Name'),
                       subtitle: Text('necmi'),
                     ),
-                    const ListTile(
-                      leading: Icon(Icons.mail),
-                      title: Text('e-Mail'),
-                      subtitle: Text('necmikural.j@gmail.com'),
+                    ListTile(
+                      leading: const Icon(Icons.mail),
+                      title: const Text('e-Mail'),
+                      subtitle: Text(user.email!),
                     ),
                     const ListTile(
                       leading: Icon(Icons.calendar_today),
@@ -60,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       leading: Icon(Icons.auto_awesome),
                       title: Text('Hobbies'),
                     ),
-                    // listView builder
+                    // TODO: listView builder, getx
                     const Divider(height: 10),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -88,6 +91,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+            const Center(child: SizedBox(height: 20)),
+            Center(
+              child: ElevatedButton.icon(
+                onPressed: () => FirebaseAuth.instance.signOut(),
+                style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(50)),
+                icon: const Icon(Icons.arrow_back),
+                label: const Text('Sign Out'),
+              ),
+            )
           ],
         ),
       ),

@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:login_and_register_app/screens/login_page.dart';
 
 class RegisterScreen extends StatefulWidget {
-  static String id = 'login_screen';
+  static String id = 'register_screen';
 
   const RegisterScreen({
     super.key,
   });
 
   @override
-  State<RegisterScreen> createState() => _SignupScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _SignupScreenState extends State<RegisterScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
   final TextEditingController biographyController = TextEditingController();

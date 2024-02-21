@@ -1,6 +1,7 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:login_and_register_app/screens/home_page.dart';
 import 'package:login_and_register_app/screens/login_page.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -23,7 +24,8 @@ class _SplashScreenState extends State<SplashScreen>
       () {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (_) => const LoginScreen(),
+            // builder: (_) => const LoginScreen(),
+            builder: (_) => const HomeScreen(),
           ),
         );
         // StreamBuilder<User?>(
@@ -70,7 +72,16 @@ class _SplashScreenState extends State<SplashScreen>
               Icons.star_rate_rounded,
               size: 80,
               color: Colors.white,
-            )
+            ),
+            SizedBox(height: 10),
+            Text(
+              "Splash!",
+              style: TextStyle(
+                fontStyle: FontStyle.italic,
+                color: Colors.white,
+                fontSize: 28,
+              ),
+            ),
           ],
         ),
       ),

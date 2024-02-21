@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "442314911704",
+    "project_id": "login-register-fa0cd",
+    "storage_bucket": "login-register-fa0cd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:442314911704:android:0116224921050759598cad",
+        "android_client_info": {
+          "package_name": "com.example.login_and_register_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPWue6kR-DM-YgGoVMeZizuwmp2Zheyfs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

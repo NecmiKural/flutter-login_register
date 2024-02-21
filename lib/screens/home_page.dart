@@ -60,11 +60,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       leading: Icon(Icons.auto_awesome),
                       title: Text('Hobbies'),
                     ),
+                    // listView builder
+                    const Divider(height: 10),
                     Padding(
-                      padding: const EdgeInsets.only(left: 55.0, right: 8.0),
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                       child: TextField(
                         controller: hobbieController,
                         textInputAction: TextInputAction.done,
+                        decoration: const InputDecoration(
+                            prefixIcon: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Icon(Icons.add),
+                        )),
                       ),
                     ),
                     Row(

@@ -12,6 +12,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController hobbieController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,36 +39,37 @@ class _HomeScreenState extends State<HomeScreen> {
                     const ListTile(
                       leading: Icon(Icons.person),
                       title: Text('Name'),
-                      subtitle:
-                          Text('necmi'),
+                      subtitle: Text('necmi'),
                     ),
                     const ListTile(
                       leading: Icon(Icons.mail),
                       title: Text('e-Mail'),
-                      subtitle:
-                          Text('necmikural.j@gmail.com'),
+                      subtitle: Text('necmikural.j@gmail.com'),
                     ),
                     const ListTile(
                       leading: Icon(Icons.calendar_today),
                       title: Text('Birthdate'),
-                      subtitle:
-                          Text('26.08.98'),
+                      subtitle: Text('26.08.98'),
                     ),
                     const ListTile(
                       leading: Icon(Icons.text_snippet_sharp),
                       title: Text('Biography'),
-                      subtitle:
-                          Text('Şöyle oldu böyle oldu'),
+                      subtitle: Text('Şöyle oldu böyle oldu'),
                     ),
                     const ListTile(
                       leading: Icon(Icons.auto_awesome),
                       title: Text('Hobbies'),
-                      subtitle:
-                          Text('Macera'),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 55.0, right: 8.0),
+                      child: TextField(
+                        controller: hobbieController,
+                        textInputAction: TextInputAction.done,
+                      ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
+                      children: [
                         TextButton(
                           child: const Text('Add Hobbie'),
                           onPressed: () {/* ... */},

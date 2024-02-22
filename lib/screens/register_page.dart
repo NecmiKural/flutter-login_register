@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:login_and_register_app/main.dart';
 import 'package:login_and_register_app/model/utils.dart';
 import 'package:login_and_register_app/screens/login_page.dart';
+import 'package:login_and_register_app/services/authentication.dart';
 
 class RegisterScreen extends StatefulWidget {
   static String id = 'register_screen';
@@ -163,7 +164,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: 50,
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: register,
+                      onPressed: () => AuthService().registerUser(
+                          name: nameController.text,
+                          email: emailController.text,
+                          password: passwordController.text,
+                          biography: biographyController.text,
+                          birthdate: dateController.text),
                       child: const Text(
                         'Register',
                         style: TextStyle(
@@ -228,10 +234,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
+      if (userCredential.user != null) {
+        AuthService().registerUser(
+            name: nameController.text,
+            email: emailController.text,
+            password: passwordController.text,
+            biography: biographyController.text,
+            birthdate: dateController.text);
+      }
     } on FirebaseAuthException catch (e) {
       Utils.showSnackBar(e.message);
     }

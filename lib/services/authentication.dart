@@ -1,8 +1,31 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../model/user.dart';
 
 class AuthService {
+  final userCollection = FirebaseFirestore.instance.collection("user");
+
+  Future<void> registerUser({
+    required String name,
+    required String email,
+    required String password,
+    required String biography,
+    required String birthdate,
+    //required String hobbie,
+  }) async {
+    await userCollection.doc().set({
+      "biography": biography,
+      "birtdate": birthdate,
+      "email": email,
+      //"hobbie": hobbie,
+      "name": name,
+      "password": password
+    });
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////
+
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   /// create user

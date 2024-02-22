@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 
 class HomeScreen extends StatelessWidget {
   static String id = 'home_screen';
@@ -81,7 +80,7 @@ class HomeScreen extends StatelessWidget {
                                 leading: Icon(Icons.auto_awesome),
                                 title: Text('Hobbies'),
                               ),
-                              // TODO: listView builder, getx
+                              // TODO: listView builder, getx her yere
                               // Obx(() {
                               //   userHobbiesList.value = data['hobbie'];
                               Obx(

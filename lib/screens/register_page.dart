@@ -255,6 +255,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             password: passwordController.text,
             biography: biographyController.text,
             birthdate: dateController.text,
+            hobbie: [],
             uid: FirebaseAuth.instance.currentUser!.uid);
       }
     } on FirebaseAuthException catch (e) {

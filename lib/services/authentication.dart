@@ -7,18 +7,19 @@ class AuthService {
   final userCollection = FirebaseFirestore.instance.collection("user");
 
 //TODO: password hashlenebilir
-  Future<void> registerUser({
-    required String name,
-    required String email,
-    required String password,
-    required String biography,
-    required String birthdate,
-    required String uid
-  }) async {
+  Future<void> registerUser(
+      {required String name,
+      required String email,
+      required String password,
+      required String biography,
+      required String birthdate,
+      required List hobbie,
+      required String uid}) async {
     await userCollection.doc(uid).set({
       "biography": biography,
       "birthdate": birthdate,
       "email": email,
+      "hobbie": hobbie,
       "name": name,
       "password": password
     });

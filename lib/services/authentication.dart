@@ -6,19 +6,18 @@ import '../model/user.dart';
 class AuthService {
   final userCollection = FirebaseFirestore.instance.collection("user");
 
+//TODO: password hashlenebilir
   Future<void> registerUser({
     required String name,
     required String email,
     required String password,
     required String biography,
     required String birthdate,
-    //required String hobbie,
   }) async {
     await userCollection.doc().set({
       "biography": biography,
       "birtdate": birthdate,
       "email": email,
-      //"hobbie": hobbie,
       "name": name,
       "password": password
     });

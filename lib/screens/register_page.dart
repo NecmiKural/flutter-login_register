@@ -164,12 +164,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: 50,
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () => AuthService().registerUser(
-                          name: nameController.text,
-                          email: emailController.text,
-                          password: passwordController.text,
-                          biography: biographyController.text,
-                          birthdate: dateController.text),
+                      onPressed: register,
                       child: const Text(
                         'Register',
                         style: TextStyle(

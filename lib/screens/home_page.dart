@@ -40,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const ListTile(
+                      // TODO: user image eklenebilir
                       leading: Icon(Icons.person),
                       title: Text('Name'),
                       subtitle: Text('necmi'),

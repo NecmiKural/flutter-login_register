@@ -28,6 +28,7 @@ class _SplashScreenState extends State<SplashScreen>
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
+                  // TODO: burada splashpage'de loading widgetı ile kalması sağlanabilir, animasyonlar
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return const Center(child: Text('Someting went wrong'));

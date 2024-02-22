@@ -19,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final user = FirebaseFirestore.instance
       .collection('user')
       .doc(FirebaseAuth.instance.currentUser!.uid);
+  List userHobbiesList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         if (snapshot.connectionState == ConnectionState.done) {
                           Map<String, dynamic> data =
                               snapshot.data!.data() as Map<String, dynamic>;
-                          List userHobbies = data['hobbie'];
+                          userHobbiesList = data['hobbie'];
                           return Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -88,10 +89,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               ListView.builder(
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
-                                itemCount: userHobbies.length,
+                                itemCount: userHobbiesList.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   return ListTile(
-                                    title: Text(userHobbies[index]),
+                                    leading: const Icon(
+                                      Icons.lens_rounded,
+                                      size: 10.0,
+                                    ),
+                                    title: Text(
+                                      userHobbiesList[index],
+                                      style: const TextStyle(fontSize: 14.0),
+                                    ),
                                   );
                                 },
                               ),
@@ -155,7 +163,14 @@ class _HomeScreenState extends State<HomeScreen> {
         userHobbies.add(hobbieController.text.trim());
         userHobbies = userHobbies.toSet().toList();
         userHobbies.removeWhere((item) => item.isEmpty);
-        await user.set({"hobbie": userHobbies}, SetOptions(merge: true));
+        await user.set({"hobbie": userHobbies}, SetOptions(merge: true)).then(
+            (value) {
+          // çok  tehlikeli
+          setState(() {
+            userHobbiesList;
+          });
+          hobbieController.text = "";
+        });
       }
     });
   }

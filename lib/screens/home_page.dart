@@ -94,6 +94,13 @@ class HomeScreen extends StatelessWidget {
                                         userHobbiesList[index],
                                         style: const TextStyle(fontSize: 14.0),
                                       ),
+                                      trailing: IconButton(
+                                        icon: const Icon(Icons.delete_rounded),
+                                        onPressed: () async => deleteHobbie(
+                                            index: index,
+                                            user: user,
+                                            userHobbiesList: userHobbiesList),
+                                      ),
                                     );
                                   },
                                 ),
@@ -153,8 +160,6 @@ class HomeScreen extends StatelessWidget {
       {required TextEditingController hobbieController,
       required DocumentReference<Map<String, dynamic>> user,
       required RxList<dynamic> userHobbiesList}) async {
-    //TODO: delete hobbies eklenebilir
-
     try {
       user.get().then((DocumentSnapshot documentSnapshot) async {
         if (documentSnapshot.exists) {
@@ -168,6 +173,28 @@ class HomeScreen extends StatelessWidget {
               (value) {
             userHobbiesList.value = userHobbies;
             hobbieController.text = "";
+          });
+        }
+      });
+    } on FirebaseAuthException catch (e) {
+      Utils.showSnackBar(e.message);
+    }
+  }
+
+  Future<void> deleteHobbie(
+      {required int index,
+      required DocumentReference<Map<String, dynamic>> user,
+      required RxList<dynamic> userHobbiesList}) async {
+    try {
+      user.get().then((DocumentSnapshot documentSnapshot) async {
+        if (documentSnapshot.exists) {
+          Map<String, dynamic> data =
+              documentSnapshot.data() as Map<String, dynamic>;
+          List userHobbies = data['hobbie'];
+          userHobbies.removeAt(index);
+          await user.set({"hobbie": userHobbies}, SetOptions(merge: true)).then(
+              (value) {
+            userHobbiesList.value = userHobbies;
           });
         }
       });

@@ -32,99 +32,112 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        //TODO: scrollable
-        child: Wrap(
-          children: [
-            Center(
-              child: Card(
-                child: FutureBuilder(
-                    future: user.get(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<DocumentSnapshot> snapshot) {
-                      if (snapshot.hasError) {
-                        return Text("Something went wrong");
-                      }
+      body: SingleChildScrollView(
+        physics: const ScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Wrap(
+            children: [
+              Center(
+                child: Card(
+                  child: FutureBuilder(
+                      future: user.get(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          return Text("Something went wrong");
+                        }
 
-                      if (snapshot.hasData && !snapshot.data!.exists) {
-                        return Text("Document does not exist");
-                      }
+                        if (snapshot.hasData && !snapshot.data!.exists) {
+                          return Text("Document does not exist");
+                        }
 
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        Map<String, dynamic> data =
-                            snapshot.data!.data() as Map<String, dynamic>;
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListTile(
-                              // TODO: user image eklenebilir
-                              leading: const Icon(Icons.person),
-                              title: const Text('Name'),
-                              subtitle: Text("${data['name']}"),
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.mail),
-                              title: const Text('e-Mail'),
-                              subtitle: Text("${data['email']}"),
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.calendar_today),
-                              title: const Text('Birthdate'),
-                              subtitle: Text("${data['birthdate']}"),
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.text_snippet_sharp),
-                              title: const Text('Biography'),
-                              subtitle: Text("${data['biography']}"),
-                            ),
-                            const ListTile(
-                              leading: Icon(Icons.auto_awesome),
-                              title: Text('Hobbies'),
-                            ),
-                            // TODO: listView builder, getx
-                            const Divider(height: 10),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 8.0, right: 8.0),
-                              child: TextField(
-                                controller: hobbieController,
-                                textInputAction: TextInputAction.done,
-                                decoration: const InputDecoration(
-                                    prefixIcon: Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Icon(Icons.add),
-                                )),
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          Map<String, dynamic> data =
+                              snapshot.data!.data() as Map<String, dynamic>;
+                          List userHobbies = data['hobbie'];
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                // TODO: user image eklenebilir
+                                leading: const Icon(Icons.person),
+                                title: const Text('Name'),
+                                subtitle: Text("${data['name']}"),
                               ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                TextButton(
-                                  onPressed: addHobbie,
-                                  child: const Text('Add Hobbie'),
+                              ListTile(
+                                leading: const Icon(Icons.mail),
+                                title: const Text('e-Mail'),
+                                subtitle: Text("${data['email']}"),
+                              ),
+                              ListTile(
+                                leading: const Icon(Icons.calendar_today),
+                                title: const Text('Birthdate'),
+                                subtitle: Text("${data['birthdate']}"),
+                              ),
+                              ListTile(
+                                leading: const Icon(Icons.text_snippet_sharp),
+                                title: const Text('Biography'),
+                                subtitle: Text("${data['biography']}"),
+                              ),
+                              const ListTile(
+                                leading: Icon(Icons.auto_awesome),
+                                title: Text('Hobbies'),
+                              ),
+                              // TODO: listView builder, getx
+                              ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: userHobbies.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return ListTile(
+                                    title: Text(userHobbies[index]),
+                                  );
+                                },
+                              ),
+                              const Divider(height: 10),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 8.0, right: 8.0),
+                                child: TextField(
+                                  controller: hobbieController,
+                                  textInputAction: TextInputAction.done,
+                                  decoration: const InputDecoration(
+                                      prefixIcon: Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: Icon(Icons.add),
+                                  )),
                                 ),
-                                const SizedBox(width: 8),
-                              ],
-                            ),
-                          ],
-                        );
-                      }
-                      return const Center(child: CircularProgressIndicator());
-                    }),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  TextButton(
+                                    onPressed: addHobbie,
+                                    child: const Text('Add Hobbie'),
+                                  ),
+                                  const SizedBox(width: 8),
+                                ],
+                              ),
+                            ],
+                          );
+                        }
+                        return const Center(child: CircularProgressIndicator());
+                      }),
+                ),
               ),
-            ),
-            const Center(child: SizedBox(height: 20)),
-            Center(
-              child: ElevatedButton.icon(
-                onPressed: () => FirebaseAuth.instance.signOut(),
-                style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(50)),
-                icon: const Icon(Icons.arrow_back),
-                label: const Text('Sign Out'),
-              ),
-            )
-          ],
+              const Center(child: SizedBox(height: 20)),
+              Center(
+                child: ElevatedButton.icon(
+                  onPressed: () => FirebaseAuth.instance.signOut(),
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(50)),
+                  icon: const Icon(Icons.arrow_back),
+                  label: const Text('Sign Out'),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -132,6 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future addHobbie() async {
     //TODO: try catch
+    //TODO: delete hobbies eklenebilir
 
     user.get().then((DocumentSnapshot documentSnapshot) async {
       if (documentSnapshot.exists) {

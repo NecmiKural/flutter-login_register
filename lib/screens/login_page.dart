@@ -14,12 +14,12 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
+final _formKey = GlobalKey<FormState>();
+
 class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool _isObscure = true;
-
-  final formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Wrap(
           children: [
             Form(
-              key: formKey,
+              key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -144,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future login() async {
-    final isValid = formKey.currentState!.validate();
+    final isValid = _formKey.currentState!.validate();
     if (!isValid) return;
 
     showDialog(

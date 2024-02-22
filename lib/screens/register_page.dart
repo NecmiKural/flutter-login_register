@@ -7,7 +7,6 @@ import 'package:login_and_register_app/screens/login_page.dart';
 import 'package:login_and_register_app/services/authentication.dart';
 
 class RegisterScreen extends StatefulWidget {
-
   const RegisterScreen({
     super.key,
   });
@@ -16,14 +15,14 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
+final _formKey = GlobalKey<FormState>();
+
 class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
   final TextEditingController biographyController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
-  final formKey = GlobalKey<FormState>();
 
   bool _isObscure = true;
 
@@ -52,7 +51,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Wrap(
           children: [
             Form(
-              key: formKey,
+              key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -231,7 +230,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Future register() async {
-    final isValid = formKey.currentState!.validate();
+    final isValid = _formKey.currentState!.validate();
     if (!isValid) return;
 
     showDialog(

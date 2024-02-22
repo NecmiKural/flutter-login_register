@@ -16,6 +16,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController hobbieController = TextEditingController();
 
+  final user = FirebaseFirestore.instance
+      .collection('user')
+      .doc(FirebaseAuth.instance.currentUser!.uid);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,10 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Center(
               child: Card(
                 child: FutureBuilder(
-                    future: FirebaseFirestore.instance
-                        .collection('user')
-                        .doc(FirebaseAuth.instance.currentUser!.uid)
-                        .get(),
+                    future: user.get(),
                     builder: (BuildContext context,
                         AsyncSnapshot<DocumentSnapshot> snapshot) {
                       if (snapshot.hasError) {
@@ -67,12 +68,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               title: const Text('e-Mail'),
                               subtitle: Text("${data['email']}"),
                             ),
-                             ListTile(
+                            ListTile(
                               leading: const Icon(Icons.calendar_today),
                               title: const Text('Birthdate'),
                               subtitle: Text("${data['birthdate']}"),
                             ),
-                             ListTile(
+                            ListTile(
                               leading: const Icon(Icons.text_snippet_sharp),
                               title: const Text('Biography'),
                               subtitle: Text("${data['biography']}"),
@@ -100,8 +101,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 TextButton(
+                                  onPressed: addHobbie,
                                   child: const Text('Add Hobbie'),
-                                  onPressed: () {/* ... */},
                                 ),
                                 const SizedBox(width: 8),
                               ],
@@ -127,5 +128,25 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  Future addHobbie() async {
+    //TODO: sadece hobi için collection açılabilir, veya direkt parse edilir
+
+    // await user.set({"hobbie": "aa a aa"}, SetOptions(merge: true));
+    // await user.update({"hobbie": hobbieController.text.trim()});
+    // await user.update({
+    //   "hobbie": {"kamp", "adg"}
+    // });
+    user.get().then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
+        print('Document data: ${data['hobbie']}');
+        List userHobbies= data['hobbie'];
+        userHobbies.add("value");
+        print(userHobbies);
+      }
+    });
   }
 }

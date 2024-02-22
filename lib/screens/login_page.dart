@@ -2,12 +2,10 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:login_and_register_app/main.dart';
-import 'package:login_and_register_app/model/utils.dart';
+import 'package:login_and_register_app/utils/utils.dart';
 import 'package:login_and_register_app/screens/register_page.dart';
 
 class LoginScreen extends StatefulWidget {
-  static String id = 'login_screen';
-
   const LoginScreen({
     super.key,
   });
@@ -100,17 +98,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       hintText: 'Enter your password',
                     ),
                   ),
-                  //TODO: reset password ve verify email eklenebilir ekstradan
-                  //const SizedBox(height: 10),
-                  // GestureDetector(
-                  //   onTap: () {},
-                  //   child: const Text(
-                  //     'Forgot password?',
-                  //     style: TextStyle(
-                  //       color: Colors.deepPurple,
-                  //     ),
-                  //   ),
-                  // ),
                   const SizedBox(height: 20),
                   SizedBox(
                     height: 50,

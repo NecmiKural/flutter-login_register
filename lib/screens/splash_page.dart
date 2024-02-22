@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:login_and_register_app/screens/home_page.dart';
 import 'package:login_and_register_app/screens/login_page.dart';
+import 'package:login_and_register_app/widgets/splash.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
-  static String id = 'main screen';
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -28,12 +28,11 @@ class _SplashScreenState extends State<SplashScreen>
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  // TODO: burada splashpage'de loading widgetı ile kalması sağlanabilir, animasyonlar
-                  return const Center(child: CircularProgressIndicator());
+                  return splash();
                 } else if (snapshot.hasError) {
                   return const Center(child: Text('Someting went wrong'));
                 } else if (snapshot.hasData) {
-                  return HomeScreen();
+                  return const HomeScreen();
                 } else {
                   return const LoginScreen();
                 }
@@ -55,35 +54,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blue, Colors.purple],
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-          ),
-        ),
-        child: const Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.star_rate_rounded,
-              size: 80,
-              color: Colors.white,
-            ),
-            SizedBox(height: 10),
-            Text(
-              "Splash!",
-              style: TextStyle(
-                fontStyle: FontStyle.italic,
-                color: Colors.white,
-                fontSize: 28,
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: splash(),
     );
   }
 }

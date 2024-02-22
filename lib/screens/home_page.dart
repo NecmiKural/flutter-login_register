@@ -2,10 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:login_and_register_app/utils/utils.dart';
 
 class HomeScreen extends StatelessWidget {
-  static String id = 'home_screen';
-
   const HomeScreen({
     super.key,
   });
@@ -41,11 +40,11 @@ class HomeScreen extends StatelessWidget {
                       builder: (BuildContext context,
                           AsyncSnapshot<DocumentSnapshot> snapshot) {
                         if (snapshot.hasError) {
-                          return Text("Something went wrong");
+                          return Utils.showSnackBar("Something went wrong");
                         }
 
                         if (snapshot.hasData && !snapshot.data!.exists) {
-                          return Text("Document does not exist");
+                          return Utils.showSnackBar("Document does not exist");
                         }
 
                         if (snapshot.connectionState == ConnectionState.done) {
@@ -56,7 +55,6 @@ class HomeScreen extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               ListTile(
-                                // TODO: user image eklenebilir
                                 leading: const Icon(Icons.person),
                                 title: const Text('Name'),
                                 subtitle: Text("${data['name']}"),
@@ -80,9 +78,6 @@ class HomeScreen extends StatelessWidget {
                                 leading: Icon(Icons.auto_awesome),
                                 title: Text('Hobbies'),
                               ),
-                              // TODO: listView builder, getx her yere
-                              // Obx(() {
-                              //   userHobbiesList.value = data['hobbie'];
                               Obx(
                                 () => ListView.builder(
                                   physics: const NeverScrollableScrollPhysics(),
@@ -103,7 +98,6 @@ class HomeScreen extends StatelessWidget {
                                   },
                                 ),
                               ),
-
                               const Divider(height: 10),
                               Padding(
                                 padding: const EdgeInsets.only(
@@ -159,23 +153,26 @@ class HomeScreen extends StatelessWidget {
       {required TextEditingController hobbieController,
       required DocumentReference<Map<String, dynamic>> user,
       required RxList<dynamic> userHobbiesList}) async {
-    //TODO: try catch, hobbies yoksa patlıyor
     //TODO: delete hobbies eklenebilir
 
-    user.get().then((DocumentSnapshot documentSnapshot) async {
-      if (documentSnapshot.exists) {
-        Map<String, dynamic> data =
-            documentSnapshot.data() as Map<String, dynamic>;
-        List userHobbies = data['hobbie'];
-        userHobbies.add(hobbieController.text.trim());
-        userHobbies = userHobbies.toSet().toList();
-        userHobbies.removeWhere((item) => item.isEmpty);
-        await user.set({"hobbie": userHobbies}, SetOptions(merge: true)).then(
-            (value) {
-          userHobbiesList.value = userHobbies;
-          hobbieController.text = "";
-        });
-      }
-    });
+    try {
+      user.get().then((DocumentSnapshot documentSnapshot) async {
+        if (documentSnapshot.exists) {
+          Map<String, dynamic> data =
+              documentSnapshot.data() as Map<String, dynamic>;
+          List userHobbies = data['hobbie'];
+          userHobbies.add(hobbieController.text.trim());
+          userHobbies = userHobbies.toSet().toList();
+          userHobbies.removeWhere((item) => item.isEmpty);
+          await user.set({"hobbie": userHobbies}, SetOptions(merge: true)).then(
+              (value) {
+            userHobbiesList.value = userHobbies;
+            hobbieController.text = "";
+          });
+        }
+      });
+    } on FirebaseAuthException catch (e) {
+      Utils.showSnackBar(e.message);
+    }
   }
 }

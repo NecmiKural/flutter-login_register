@@ -2,12 +2,11 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:login_and_register_app/main.dart';
-import 'package:login_and_register_app/model/utils.dart';
+import 'package:login_and_register_app/utils/utils.dart';
 import 'package:login_and_register_app/screens/login_page.dart';
 import 'package:login_and_register_app/services/authentication.dart';
 
 class RegisterScreen extends StatefulWidget {
-  static String id = 'register_screen';
 
   const RegisterScreen({
     super.key,
@@ -252,7 +251,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         AuthService().registerUser(
             name: nameController.text,
             email: emailController.text,
-            password: passwordController.text,
             biography: biographyController.text,
             birthdate: dateController.text,
             hobbie: [],

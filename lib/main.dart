@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:login_and_register_app/model/utils.dart';
+import 'package:login_and_register_app/utils/utils.dart';
 import 'package:login_and_register_app/screens/splash_page.dart';
 import 'firebase_options.dart';
 

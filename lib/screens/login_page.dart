@@ -76,8 +76,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextFormField(
                     controller: passwordController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) => value != null && value.length < 6
-                        ? 'Enter minimum 6 characters'
+                    validator: (value) => value != null && value.isEmpty
+                        ? 'Please enter password'
                         : null,
                     textInputAction: TextInputAction.done,
                     obscureText: _isObscure,

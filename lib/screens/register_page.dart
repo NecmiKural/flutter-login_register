@@ -254,7 +254,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             email: emailController.text,
             password: passwordController.text,
             biography: biographyController.text,
-            birthdate: dateController.text);
+            birthdate: dateController.text,
+            uid: FirebaseAuth.instance.currentUser!.uid);
       }
     } on FirebaseAuthException catch (e) {
       Utils.showSnackBar(e.message);

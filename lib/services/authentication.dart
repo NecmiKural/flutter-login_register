@@ -13,10 +13,11 @@ class AuthService {
     required String password,
     required String biography,
     required String birthdate,
+    required String uid
   }) async {
-    await userCollection.doc().set({
+    await userCollection.doc(uid).set({
       "biography": biography,
-      "birtdate": birthdate,
+      "birthdate": birthdate,
       "email": email,
       "name": name,
       "password": password

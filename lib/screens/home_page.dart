@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -17,8 +18,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser!;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -36,60 +35,82 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Center(
               child: Card(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const ListTile(
-                      // TODO: user image eklenebilir
-                      leading: Icon(Icons.person),
-                      title: Text('Name'),
-                      subtitle: Text('necmi'),
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.mail),
-                      title: const Text('e-Mail'),
-                      subtitle: Text(user.email!),
-                    ),
-                    const ListTile(
-                      leading: Icon(Icons.calendar_today),
-                      title: Text('Birthdate'),
-                      subtitle: Text('26.08.98'),
-                    ),
-                    const ListTile(
-                      leading: Icon(Icons.text_snippet_sharp),
-                      title: Text('Biography'),
-                      subtitle: Text('Şöyle oldu böyle oldu'),
-                    ),
-                    const ListTile(
-                      leading: Icon(Icons.auto_awesome),
-                      title: Text('Hobbies'),
-                    ),
-                    // TODO: listView builder, getx
-                    const Divider(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                      child: TextField(
-                        controller: hobbieController,
-                        textInputAction: TextInputAction.done,
-                        decoration: const InputDecoration(
-                            prefixIcon: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Icon(Icons.add),
-                        )),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          child: const Text('Add Hobbie'),
-                          onPressed: () {/* ... */},
-                        ),
-                        const SizedBox(width: 8),
-                      ],
-                    ),
-                  ],
-                ),
+                child: FutureBuilder(
+                    future: FirebaseFirestore.instance
+                        .collection('user')
+                        .doc(FirebaseAuth.instance.currentUser!.uid)
+                        .get(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        return Text("Something went wrong");
+                      }
+
+                      if (snapshot.hasData && !snapshot.data!.exists) {
+                        return Text("Document does not exist");
+                      }
+
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        Map<String, dynamic> data =
+                            snapshot.data!.data() as Map<String, dynamic>;
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ListTile(
+                              // TODO: user image eklenebilir
+                              leading: const Icon(Icons.person),
+                              title: const Text('Name'),
+                              subtitle: Text("${data['name']}"),
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.mail),
+                              title: const Text('e-Mail'),
+                              subtitle: Text("${data['email']}"),
+                            ),
+                             ListTile(
+                              leading: const Icon(Icons.calendar_today),
+                              title: const Text('Birthdate'),
+                              subtitle: Text("${data['birthdate']}"),
+                            ),
+                             ListTile(
+                              leading: const Icon(Icons.text_snippet_sharp),
+                              title: const Text('Biography'),
+                              subtitle: Text("${data['biography']}"),
+                            ),
+                            const ListTile(
+                              leading: Icon(Icons.auto_awesome),
+                              title: Text('Hobbies'),
+                            ),
+                            // TODO: listView builder, getx
+                            const Divider(height: 10),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 8.0, right: 8.0),
+                              child: TextField(
+                                controller: hobbieController,
+                                textInputAction: TextInputAction.done,
+                                decoration: const InputDecoration(
+                                    prefixIcon: Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Icon(Icons.add),
+                                )),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                TextButton(
+                                  child: const Text('Add Hobbie'),
+                                  onPressed: () {/* ... */},
+                                ),
+                                const SizedBox(width: 8),
+                              ],
+                            ),
+                          ],
+                        );
+                      }
+                      return const Center(child: CircularProgressIndicator());
+                    }),
               ),
             ),
             const Center(child: SizedBox(height: 20)),

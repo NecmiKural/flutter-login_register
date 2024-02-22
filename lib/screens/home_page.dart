@@ -131,21 +131,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future addHobbie() async {
-    //TODO: sadece hobi için collection açılabilir, veya direkt parse edilir
+    //TODO: try catch
 
-    // await user.set({"hobbie": "aa a aa"}, SetOptions(merge: true));
-    // await user.update({"hobbie": hobbieController.text.trim()});
-    // await user.update({
-    //   "hobbie": {"kamp", "adg"}
-    // });
-    user.get().then((DocumentSnapshot documentSnapshot) {
+    user.get().then((DocumentSnapshot documentSnapshot) async {
       if (documentSnapshot.exists) {
         Map<String, dynamic> data =
             documentSnapshot.data() as Map<String, dynamic>;
-        print('Document data: ${data['hobbie']}');
-        List userHobbies= data['hobbie'];
-        userHobbies.add("value");
-        print(userHobbies);
+        List userHobbies = data['hobbie'];
+        userHobbies.add(hobbieController.text.trim());
+        userHobbies = userHobbies.toSet().toList();
+        userHobbies.removeWhere((item) => item.isEmpty);
+        await user.set({"hobbie": userHobbies}, SetOptions(merge: true));
       }
     });
   }

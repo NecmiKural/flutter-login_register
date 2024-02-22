@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   static String id = 'home_screen';
 
   const HomeScreen({
@@ -10,19 +12,13 @@ class HomeScreen extends StatefulWidget {
   });
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController hobbieController = TextEditingController();
-
-  final user = FirebaseFirestore.instance
-      .collection('user')
-      .doc(FirebaseAuth.instance.currentUser!.uid);
-  List userHobbiesList = [];
-
-  @override
   Widget build(BuildContext context) {
+    final TextEditingController hobbieController = TextEditingController();
+
+    final user = FirebaseFirestore.instance
+        .collection('user')
+        .doc(FirebaseAuth.instance.currentUser!.uid);
+    final userHobbiesList = [].obs;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -56,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         if (snapshot.connectionState == ConnectionState.done) {
                           Map<String, dynamic> data =
                               snapshot.data!.data() as Map<String, dynamic>;
-                          userHobbiesList = data['hobbie'];
+                          userHobbiesList.value = data['hobbie'];
                           return Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -86,23 +82,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                 title: Text('Hobbies'),
                               ),
                               // TODO: listView builder, getx
-                              ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: userHobbiesList.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return ListTile(
-                                    leading: const Icon(
-                                      Icons.lens_rounded,
-                                      size: 10.0,
-                                    ),
-                                    title: Text(
-                                      userHobbiesList[index],
-                                      style: const TextStyle(fontSize: 14.0),
-                                    ),
-                                  );
-                                },
+                              // Obx(() {
+                              //   userHobbiesList.value = data['hobbie'];
+                              Obx(
+                                () => ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: userHobbiesList.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return ListTile(
+                                      leading: const Icon(
+                                        Icons.lens_rounded,
+                                        size: 10.0,
+                                      ),
+                                      title: Text(
+                                        userHobbiesList[index],
+                                        style: const TextStyle(fontSize: 14.0),
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
+
                               const Divider(height: 10),
                               Padding(
                                 padding: const EdgeInsets.only(
@@ -121,7 +123,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   TextButton(
-                                    onPressed: addHobbie,
+                                    onPressed: () async => addHobbie(
+                                        hobbieController: hobbieController,
+                                        user: user,
+                                        userHobbiesList: userHobbiesList),
                                     child: const Text('Add Hobbie'),
                                   ),
                                   const SizedBox(width: 8),
@@ -151,8 +156,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future addHobbie() async {
-    //TODO: try catch
+  Future<void> addHobbie(
+      {required TextEditingController hobbieController,
+      required DocumentReference<Map<String, dynamic>> user,
+      required RxList<dynamic> userHobbiesList}) async {
+    //TODO: try catch, hobbies yoksa patlıyor
     //TODO: delete hobbies eklenebilir
 
     user.get().then((DocumentSnapshot documentSnapshot) async {
@@ -165,10 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
         userHobbies.removeWhere((item) => item.isEmpty);
         await user.set({"hobbie": userHobbies}, SetOptions(merge: true)).then(
             (value) {
-          // çok  tehlikeli
-          setState(() {
-            userHobbiesList;
-          });
+          userHobbiesList.value = userHobbies;
           hobbieController.text = "";
         });
       }

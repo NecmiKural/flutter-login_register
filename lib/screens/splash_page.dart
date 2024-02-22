@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen>
                 } else if (snapshot.hasError) {
                   return const Center(child: Text('Someting went wrong'));
                 } else if (snapshot.hasData) {
-                  return const HomeScreen();
+                  return HomeScreen();
                 } else {
                   return const LoginScreen();
                 }

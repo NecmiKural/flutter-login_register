@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:login_and_register_app/main.dart';
+import 'package:login_and_register_app/model/utils.dart';
 import 'package:login_and_register_app/screens/register_page.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -61,6 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
+                //TODO: bilgi girilmezse kırmızı yanmalı
                 const Text('Password'),
                 TextFormField(
                   controller: passwordController,
@@ -85,6 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     hintText: 'Enter your password',
                   ),
                 ),
+                //TODO: reset password ve verify email eklenebilir ekstradan
                 //const SizedBox(height: 10),
                 // GestureDetector(
                 //   onTap: () {},
@@ -140,7 +143,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future login() async {
-    //TODO: if fails, toast
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -148,13 +150,12 @@ class _LoginScreenState extends State<LoginScreen> {
         child: CircularProgressIndicator(),
       ),
     );
-
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
     } on FirebaseAuthException catch (e) {
-      print(e);
+      Utils.showSnackBar(e.message);
     }
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }

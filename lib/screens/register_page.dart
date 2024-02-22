@@ -62,6 +62,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   TextFormField(
                     controller: nameController,
                     textInputAction: TextInputAction.next,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) => value != null && value.length < 3
+                        ? 'Enter your name'
+                        : null,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       prefixIcon: Padding(
@@ -73,16 +77,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 10),
                   const Text('Birthdate'),
-                  TextField(
+                  TextFormField(
                     controller: dateController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) => value != null && value.length < 3
+                        ? 'Enter your birthday'
+                        : null,
                     decoration: const InputDecoration(
-                        hintText: 'Select birthdate',
-                        filled: true,
-                        prefixIcon: Icon(Icons.calendar_today),
-                        enabledBorder:
-                            OutlineInputBorder(borderSide: BorderSide.none),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.deepPurple))),
+                      hintText: 'Select birthdate',
+                      filled: true,
+                      prefixIcon: Icon(Icons.calendar_today),
+                      enabledBorder:
+                          OutlineInputBorder(borderSide: BorderSide.none),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.deepPurple),
+                      ),
+                    ),
                     readOnly: true,
                     onTap: _selectDate,
                   ),
@@ -90,6 +100,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const Text('Biography'),
                   TextFormField(
                     controller: biographyController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) => value != null && value.length < 12
+                        ? 'Enter your biography'
+                        : null,
                     textInputAction: TextInputAction.next,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),

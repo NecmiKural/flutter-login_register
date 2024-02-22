@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:login_and_register_app/main.dart';
@@ -19,6 +20,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool _isObscure = true;
+
+  final formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -43,98 +46,109 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Wrap(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
-                const Text('Email address'),
-                TextFormField(
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    prefixIcon: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Icon(Icons.person),
-                    ),
-                    hintText: 'Enter your email',
-                  ),
-                ),
-                const SizedBox(height: 10),
-                //TODO: bilgi girilmezse kırmızı yanmalı
-                const Text('Password'),
-                TextFormField(
-                  controller: passwordController,
-                  textInputAction: TextInputAction.done,
-                  obscureText: _isObscure,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    prefixIcon: const Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Icon(Icons.lock),
-                    ),
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _isObscure = !_isObscure;
-                        });
-                      },
-                      icon: Icon(
-                        _isObscure ? Icons.visibility : Icons.visibility_off,
+            Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  const Text('Email address'),
+                  TextFormField(
+                    controller: emailController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (email) =>
+                        email != null && !EmailValidator.validate(email)
+                            ? 'Enter a valid email'
+                            : null,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Icon(Icons.person),
                       ),
+                      hintText: 'Enter your email',
                     ),
-                    hintText: 'Enter your password',
                   ),
-                ),
-                //TODO: reset password ve verify email eklenebilir ekstradan
-                //const SizedBox(height: 10),
-                // GestureDetector(
-                //   onTap: () {},
-                //   child: const Text(
-                //     'Forgot password?',
-                //     style: TextStyle(
-                //       color: Colors.deepPurple,
-                //     ),
-                //   ),
-                // ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  height: 50,
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: login,
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 20,
+                  const SizedBox(height: 10),
+                  const Text('Password'),
+                  TextFormField(
+                    controller: passwordController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) => value != null && value.length < 6
+                        ? 'Enter minimum 6 characters'
+                        : null,
+                    textInputAction: TextInputAction.done,
+                    obscureText: _isObscure,
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Icon(Icons.lock),
                       ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Don't have an account? "),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const RegisterScreen()),
-                        );
-                      },
-                      child: const Text(
-                        'Register',
-                        style: TextStyle(
-                          color: Colors.deepPurple,
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _isObscure = !_isObscure;
+                          });
+                        },
+                        icon: Icon(
+                          _isObscure ? Icons.visibility : Icons.visibility_off,
                         ),
                       ),
-                    )
-                  ],
-                ),
-              ],
+                      hintText: 'Enter your password',
+                    ),
+                  ),
+                  //TODO: reset password ve verify email eklenebilir ekstradan
+                  //const SizedBox(height: 10),
+                  // GestureDetector(
+                  //   onTap: () {},
+                  //   child: const Text(
+                  //     'Forgot password?',
+                  //     style: TextStyle(
+                  //       color: Colors.deepPurple,
+                  //     ),
+                  //   ),
+                  // ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: login,
+                      child: const Text(
+                        'Login',
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Don't have an account? "),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const RegisterScreen()),
+                          );
+                        },
+                        child: const Text(
+                          'Register',
+                          style: TextStyle(
+                            color: Colors.deepPurple,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -143,6 +157,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future login() async {
+    final isValid = formKey.currentState!.validate();
+    if (!isValid) return;
+
     showDialog(
       context: context,
       barrierDismissible: false,

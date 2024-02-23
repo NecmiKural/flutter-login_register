@@ -5,8 +5,11 @@
 - cloud_firestore
 - email_validator
 - get
+  
 The first three packages were used for authentication and database operations in Firebase.
+
 email_ validator was used to verify the accuracy of the email value entered when the user logged in or registered.
+
 Get was used for the state management needed on the main screen.
 
 **Scenario of the Application**
